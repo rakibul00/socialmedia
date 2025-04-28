@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}Likes{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <h3>Likes for "{{ post.content }}"</h3>
+        <div class="card mb-4">
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary">
+                        {% if user_has_liked %}
+                            Unlike
+                        {% else %}
+                            Like
+                        {% endif %}
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5>All Likes</h5>
+                {% for like in likes %}
+                    <div class="d-flex mb-2">
+                        <img src="{{ like.user.profile_picture.url }}" class="profile-pic me-2">
+                        <div>
+                            <strong>{{ like.user.username }}</strong>
+                        </div>
+                    </div>
+                {% empty %}
+                    <p>No likes yet. Be the first to like this post!</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

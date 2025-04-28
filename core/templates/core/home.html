@@ -1,0 +1,113 @@
+
+
+
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <!-- Centered Content -->
+        <div class="col-md-8">
+            <!-- Search Bar -->
+
+
+            <!-- Create Post Form -->
+            <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <a href="{% url 'profile' %}">
+                            {% if profile_user.profile_picture %}
+                            <img src="{{ profile_user.profile_picture.url }}" class="rounded-circle me-2" width="50"
+                                height="50" alt="Profile Picture">
+
+                            {% endif %}
+                        </a>
+                        <h6 class="mb-0">{{ profile_user.username }}</h6>
+                    </div>
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <textarea class="form-control mb-3" rows="2"
+                            placeholder="What's on your mind, {{ user }}?"></textarea>
+                        <div class="d-flex justify-content-between">
+
+                            <a href="{% url 'post_create' %}" class="btn btn-primary">Post</a>
+
+                            <a href="{% url 'create_story' %}" class="btn btn-secondary">Post a Story</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Stories -->
+            <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex overflow-auto">
+                        {% for story in stories %}
+                        <div class="text-center mx-2">
+                            {% if story.image %}
+                            <img src="{{ story.image.url }}" class="story" alt="Story"
+                                style="width: 100px; height: 100px; border-radius: 50%;">
+                            {% elif story.video %}
+                            <video class="story" style="width: 100px; height: 100px; border-radius: 50%;" controls>
+                                <source src="{{ story.video.url }}" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                            {% else %}
+                            <div class="story-placeholder"
+                                style="width: 100px; height: 100px; border-radius: 50%; background-color: #ddd; display: flex; align-items: center; justify-content: center;">
+                                <span>No Media</span>
+                            </div>
+                            {% endif %}
+                            <p class="small">{{ story.user.username }}</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Posts Feed -->
+            {% for post in posts %}
+            <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                    <!-- Post Header -->
+                    <div class="d-flex align-items-center mb-3">
+                        <img src="{{ post.user.profile_picture.url }}" class="rounded-circle me-2" width="50"
+                            height="50" alt="Profile Picture">
+                        <div>
+                            <h6 class="mb-0">{{ post.user.username }}</h6>
+                            <small class="text-muted">{{ post.created_at|timesince }} ago</small>
+                        </div>
+                    </div>
+
+                    <!-- Post Content -->
+                  
+                    <a href="{% url 'post_detail' post.id %}" class="text-decoration-none" style="color: inherit;">
+                        <p>{{ post.content }}</p>                    </a>
+
+                    <!-- Post Image -->
+                    {% if post.image %}
+                    <a href="{% url 'post_detail' post.id %}">
+                        <img src="{{ post.image.url }}" class="img-fluid rounded mb-3" alt="Post Image">
+                    </a>
+                    {% endif %}
+
+                    <!-- Post Actions -->
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'like_view' post.id %}" class="btn btn-sm btn-outline-primary">
+                            Like (<span class="like-count">{{ post.like_set.count }}</span>)
+                        </a>
+                        <a href="{% url 'post_detail' post.id %}" class="btn btn-sm btn-outline-secondary">
+                            Comments ({{ post.comment_set.count }})
+                        </a>
+                    </div>
+
+                    <!-- Edit and Delete Buttons -->
+                    
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

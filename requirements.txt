@@ -1,0 +1,8 @@
+asgiref
+channels
+crispy-bootstrap5
+Django
+django-crispy-forms
+pillow
+sqlparse
+typing_extensions

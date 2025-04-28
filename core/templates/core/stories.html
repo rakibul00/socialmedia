@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Stories{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <!-- Post a Story -->
+        <div class="mb-4">
+            <h3>Post a Story</h3>
+            <form method="post" enctype="multipart/form-data" action="{% url 'create_story' %}">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="image" class="form-label">Upload Image</label>
+                    <input type="file" name="image" id="image" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label for="video" class="form-label">Upload Video (Optional)</label>
+                    <input type="file" name="video" id="video" class="form-control">
+                </div>
+                <button type="submit" class="btn btn-success">Post Story</button>
+            </form>
+        </div>
+
+        <!-- View Stories -->
+        <div class="mb-4">
+            <h3>Stories</h3>
+            <div class="d-flex overflow-auto">
+                {% for story in stories %}
+                    <div class="text-center mx-2">
+                        {% if story.image %}
+                            <img src="{{ story.image.url }}" class="story" alt="Story" style="width: 100px; height: 100px; border-radius: 50%;">
+                        {% elif story.video %}
+                            <video class="story" style="width: 100px; height: 100px; border-radius: 50%;" controls>
+                                <source src="{{ story.video.url }}" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        {% endif %}
+                        <p class="small">{{ story.user.username }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

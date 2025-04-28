@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Friend{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <h3>All Users</h3>
+        <ul class="list-group">
+            {% for user in users %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <strong>{{ user.username }}</strong>
+                    </div>
+                    <a href="{% url 'send_friend_request' user.id %}" class="btn btn-sm btn-success">Send Friend Request</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock %}

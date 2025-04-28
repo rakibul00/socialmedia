@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Comments{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <h3>Comments for "{{ post.content }}"</h3>
+        <div class="card mb-4">
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <button type="submit" class="btn btn-primary mt-2">Add Comment</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5>All Comments</h5>
+                {% for comment in comments %}
+                    <div class="d-flex mb-2">
+                        <img src="{{ comment.user.profile_picture.url }}" class="profile-pic me-2">
+                        <div>
+                            <strong>{{ comment.user.username }}</strong>
+                            <p class="mb-0">{{ comment.content }}</p>
+                            <small class="text-muted">{{ comment.created_at|timesince }} ago</small>
+                        </div>
+                    </div>
+                {% empty %}
+                    <p>No comments yet. Be the first to comment!</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
