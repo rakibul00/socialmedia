@@ -412,3 +412,4 @@ def post_detail(request, post_id):
         form = CommentForm()
 
     return render(request, 'core/details.html', {'post': post, 'comments': comments, 'form': form})
+

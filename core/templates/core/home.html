@@ -1,8 +1,6 @@
-
-
-
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
+{% load static %}
 
 {% block content %}
 <div class="container mt-4">
@@ -18,9 +16,9 @@
                     <div class="d-flex align-items-center mb-3">
                         <a href="{% url 'profile' %}">
                             {% if profile_user.profile_picture %}
-                            <img src="{{ profile_user.profile_picture.url }}" class="rounded-circle me-2" width="50"
-                                height="50" alt="Profile Picture">
-
+                                <img src="{{ profile_user.profile_picture.url }}" class="rounded-circle me-2" width="50" height="50" alt="Profile Picture">
+                            {% else %}
+                                <img src="{% static 'images/default_profile_picture.png' %}" class="rounded-circle me-2" width="50" height="50" alt="No Profile Picture">
                             {% endif %}
                         </a>
                         <h6 class="mb-0">{{ profile_user.username }}</h6>
@@ -72,8 +70,11 @@
                 <div class="card-body">
                     <!-- Post Header -->
                     <div class="d-flex align-items-center mb-3">
-                        <img src="{{ post.user.profile_picture.url }}" class="rounded-circle me-2" width="50"
-                            height="50" alt="Profile Picture">
+                        {% if post.user.profile_picture %}
+                            <img src="{{ post.user.profile_picture.url }}" class="rounded-circle me-2" width="50" height="50" alt="Profile Picture">
+                        {% else %}
+                            <img src="{% static 'images/default_profile_picture.png' %}" class="rounded-circle me-2" width="50" height="50" alt="Default Profile Picture">
+                        {% endif %}
                         <div>
                             <h6 class="mb-0">{{ post.user.username }}</h6>
                             <small class="text-muted">{{ post.created_at|timesince }} ago</small>

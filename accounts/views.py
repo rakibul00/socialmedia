@@ -48,6 +48,7 @@ def user_logout(request):
 
 @login_required
 def profile(request, username=None):
+    
     if username:
         profile_user = CustomUser.objects.get(username=username)
     else:
