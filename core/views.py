@@ -297,7 +297,12 @@ from .models import Post, Like
 @login_required
 def like_view(request, post_id):
     post = get_object_or_404(Post, id=post_id)
-    likes = Like.objects.filter(post=post)
+    likes = post.likes.all()  # Access the related likes using the `related_name`
+    for like in likes:
+        if not like.user.profile_picture:
+            like.user.profile_picture_url = '/static/images/default_profile_picture.png'
+        else:
+            like.user.profile_picture_url = like.user.profile_picture.url
     user_has_liked = likes.filter(user=request.user).exists()
 
     if request.method == 'POST':
@@ -309,7 +314,7 @@ def like_view(request, post_id):
             messages.success(request, 'You liked the post.')
         return redirect('like_view', post_id=post.id)
 
-    return render(request, 'core/like.html', {'post': post, 'likes': likes, 'user_has_liked': user_has_liked})
+    return render(request, 'core/likes.html', {'post': post, 'likes': likes, 'user_has_liked': user_has_liked})
 
 
 
@@ -413,3 +418,37 @@ def post_detail(request, post_id):
 
     return render(request, 'core/details.html', {'post': post, 'comments': comments, 'form': form})
 
+from django.shortcuts import get_object_or_404
+from django.http import HttpResponseForbidden
+from .models import Comment
+from .forms import CommentForm
+
+@login_required
+def comment_edit(request, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
+    if comment.user != request.user:
+        return HttpResponseForbidden("You are not allowed to edit this comment.")
+    
+    if request.method == 'POST':
+        form = CommentForm(request.POST, instance=comment)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Comment updated successfully!')
+            return redirect('post_detail', post_id=comment.post.id)
+    else:
+        form = CommentForm(instance=comment)
+    
+    return render(request, 'core/comment_edit.html', {'form': form, 'comment': comment})
+
+@login_required
+def comment_delete(request, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
+    if comment.user != request.user:
+        return HttpResponseForbidden("You are not allowed to delete this comment.")
+    
+    if request.method == 'POST':
+        comment.delete()
+        messages.success(request, 'Comment deleted successfully!')
+        return redirect('post_detail', post_id=comment.post.id)
+    
+    return render(request, 'core/comment_confirm_delete.html', {'comment': comment})

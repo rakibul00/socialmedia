@@ -96,7 +96,7 @@
                     <!-- Post Actions -->
                     <div class="d-flex justify-content-between">
                         <a href="{% url 'like_view' post.id %}" class="btn btn-sm btn-outline-primary">
-                            Like (<span class="like-count">{{ post.like_set.count }}</span>)
+                            Like (<span class="like-count">{{  post.likes.count }}</span>)
                         </a>
                         <a href="{% url 'post_detail' post.id %}" class="btn btn-sm btn-outline-secondary">
                             Comments ({{ post.comment_set.count }})

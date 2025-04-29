@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
-
+{% load static %}
 {% block title %}Comments{% endblock %}
 
 {% block content %}
@@ -21,8 +21,12 @@
             <div class="card-body">
                 <h5>All Comments</h5>
                 {% for comment in comments %}
-                    <div class="d-flex mb-2">
-                        <img src="{{ comment.user.profile_picture.url }}" class="profile-pic me-2">
+                    <div class="d-flex mb-3">
+                        {% if comment.user.profile_picture %}
+                            <img src="{{ comment.user.profile_picture.url }}" class="rounded-circle me-2" width="40" height="40" alt="Profile Picture">
+                        {% else %}
+                            <img src="{% static 'images/default_profile_picture.png' %}" class="rounded-circle me-2" width="40" height="40" alt="Default Profile Picture">
+                        {% endif %}
                         <div>
                             <strong>{{ comment.user.username }}</strong>
                             <p class="mb-0">{{ comment.content }}</p>

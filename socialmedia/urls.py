@@ -23,6 +23,7 @@ from core import views as core_views
 from django.contrib.auth import views as auth_views
 from core import views as core_views
 from django.urls import path
+from core import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     
@@ -46,6 +47,9 @@ urlpatterns = [
     path('', core_views.home, name='home'),
      path('post/create/', core_views.post_create, name='post_create'),
     path('post/delete/<int:post_id>/', core_views.delete_post, name='delete_post'),
+  
+    path('comment/<int:comment_id>/edit/', views.comment_edit, name='comment_edit'),
+    path('comment/<int:comment_id>/delete/', views.comment_delete, name='comment_delete'),
  
    
     path('example/', core_views.example_view, name='example'),
